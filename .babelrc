@@ -1,0 +1,18 @@
+{
+  "presets": [
+    "env"
+  ],
+  "plugins": [
+    "syntax-dynamic-import",
+    "transform-runtime",
+    [
+      "component",
+      [
+        {
+          "libraryName": "mint-ui",
+          "style": true
+        }
+      ]
+    ]
+  ]
+}

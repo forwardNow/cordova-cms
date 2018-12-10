@@ -1,0 +1,32 @@
+html,
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  //font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif;
+  font-size: 14px;
+  // font-weight: 400;
+  line-height: 1.6;
+  color: #333;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: #108cee;
+  text-decoration: none;
+
+  &:hover,
+  &:active {
+    color: lighten(#108cee, 10%);
+  }
+}
+
+a > img {
+  border: none 0;
+}

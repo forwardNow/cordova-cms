@@ -1,0 +1,21 @@
+
+@font-face {
+  font-family: "iconfont";
+  src: url('./iconfont.eot?t=1537167033196'); /* IE9 */
+  src:
+    /* IE6-IE8 */
+    url('./iconfont.eot?t=1537167033196#iefix') format('embedded-opentype'),
+    /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+    url('./iconfont.ttf?t=1537167033196') format('truetype');
+}
+
+.iconfont {
+  font-family: 'iconfont' !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-dengchu::before { content: "\eb45"; }
+

@@ -1,0 +1,33 @@
+/**
+ * 公共、工具
+ */
+
+.clearfix::before,
+.clearfix::after {
+  display: table;
+  content: " ";
+}
+
+.clearfix::after {
+  clear: both;
+}
+
+.text_primary {
+  color: #108cee;
+}
+
+.text_success {
+  color: #2cb663;
+}
+
+.text_warning {
+  color: #f4b329;
+}
+
+.text_danger {
+  color: #eb5252;
+}
+
+.text_center {
+  text-align: center;
+}
