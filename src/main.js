@@ -2,7 +2,7 @@
 import Vue from 'vue';
 
 // mint-ui
-import './plugins/mint-ui';
+import './plugins/MintUI';
 
 // 路由
 import router from './router';

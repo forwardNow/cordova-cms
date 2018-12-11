@@ -10,12 +10,10 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const baseConfig = require('./webpack.config.base');
 
+const CordovaBroswerWebpackPlugin = require('./plugins/CordovaBroswerWebpackPlugin');
+
 module.exports = merge(baseConfig, {
   mode: 'production',
-
-  output: {
-    publicPath: './',
-  },
 
   stats: {
     children: false,
@@ -53,7 +51,7 @@ module.exports = merge(baseConfig, {
       },
     },
     runtimeChunk: {
-      name: 'js/manifest',
+      name: 'manifest',
     },
   },
 
@@ -64,12 +62,16 @@ module.exports = merge(baseConfig, {
     new InlineManifestWebpackPlugin(),
 
     new MiniCssExtractPlugin({
-      filename: 'css/[name].[hash:8].css',
-      chunkFilename: 'css/[name].[hash:8].css',
+      filename: '[name].css',
+      chunkFilename: '[name].css',
     }),
 
-    new CleanWebpackPlugin(['www'], {
+    new CleanWebpackPlugin(['www', ''], {
       root: path.join(__dirname, '..'),
+    }),
+
+    new CordovaBroswerWebpackPlugin({
+      cmd: 'cordova build browser',
     }),
   ],
 });

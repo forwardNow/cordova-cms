@@ -1,4 +1,4 @@
-import http from '../plugins/http';
+import http from '../plugins/CordovaHttp';
 
 class BaseService {
   /**

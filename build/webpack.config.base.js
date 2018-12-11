@@ -8,16 +8,21 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 
-const NODE_ENV = JSON.stringify(process.env.NODE_ENV);
-const IS_DEV_MODE = NODE_ENV === 'development';
+const platform = JSON.stringify(process.env.platform);
 const baseURL = JSON.stringify(process.env.baseURL);
+const isWatch = Boolean(process.env.isWatch);
 
-new webpack.DefinePlugin({
-  'process.env.NODE_ENV': NODE_ENV,
-  'process.env.baseURL': baseURL,
-});
+
+
+console.log(baseURL);
 
 module.exports = {
+
+  watch: isWatch,
+
+  watchOptions: {
+    ignored: /node_modules/,
+  },
 
   // 入口。指定要打包文件的位置
   entry: path.join(__dirname, '../src/main.js'),
@@ -27,11 +32,9 @@ module.exports = {
     // 指定打包好的文件，输出的位置
     path: path.join(__dirname, '../www'),
 
-    // publicPath: '../',
-
     // 指定输出文件的名称
     filename: '[name].js',
-    chunkFilename: 'js/[name].[hash:8].js',
+    chunkFilename: '[name].js',
   },
 
   // 配置第三方模块加载器
@@ -52,14 +55,14 @@ module.exports = {
          * loader 从右到左调用，以管道的方式
          */
         use: [
-          IS_DEV_MODE ? 'style-loader' : MiniCssExtractPlugin.loader,
+          MiniCssExtractPlugin.loader,
           'css-loader',
         ],
       },
       {
         test: /\.less$/,
         use: [
-          IS_DEV_MODE ? 'style-loader' : MiniCssExtractPlugin.loader,
+          MiniCssExtractPlugin.loader,
           'css-loader',
           'less-loader',
         ],
@@ -67,7 +70,7 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
-          IS_DEV_MODE ? 'style-loader' : MiniCssExtractPlugin.loader,
+          MiniCssExtractPlugin.loader,
           'css-loader',
           'sass-loader',
         ],
@@ -90,7 +93,7 @@ module.exports = {
                * 设置打包后的文件名称，默认为 hash 值名称
                * [hash:8] 取前 8 位 hash 值
                */
-              name: 'img/[name].[hash:8].[ext]',
+              name: '[name].[ext]',
             },
           },
         ],
@@ -109,7 +112,7 @@ module.exports = {
                * 设置打包后的文件名称，默认为 hash 值名称
                * [hash:8] 取前 8 位 hash 值
                */
-              name: 'font/[name].[hash:8].[ext]',
+              name: '[name].[ext]',
             },
           },
         ],
@@ -127,6 +130,11 @@ module.exports = {
   },
   // 配置插件
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.baseURL': baseURL,
+      'process.env.platform': platform,
+    }),
+
     new VueLoaderPlugin(),
 
     new FriendlyErrorsWebpackPlugin({

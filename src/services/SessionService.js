@@ -2,7 +2,7 @@
  * @fileoverview 登陆认证服务
  */
 import SessionAPI from '../apis/SessionAPI';
-import http from '../plugins/http';
+import http from '../plugins/CordovaHttp';
 
 const SessionService = {};
 const USER_INFO = 'userInfo';
