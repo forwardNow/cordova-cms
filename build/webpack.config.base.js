@@ -11,11 +11,11 @@ const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 const { dev, prod } = require('./env');
 
-const isDev = JSON.stringify(process.env.NODE_ENV) === 'dev';
+const isDev = process.env.NODE_ENV === 'dev';
+
+console.log('isDev：', isDev);
 
 const env = isDev ? dev : prod;
-
-console.log(dev, prod);
 
 module.exports = {
   mode: 'production',
