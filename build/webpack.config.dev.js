@@ -1,37 +1,26 @@
-const webpack = require('webpack');
 const merge = require('webpack-merge');
 
 const baseConfig = require('./webpack.config.base');
 
+const CordovaBroswerWebpackPlugin = require('./plugins/CordovaBroswerWebpackPlugin');
+
+const env = require('./env');
+
 module.exports = merge(baseConfig, {
-  mode: 'development',
-
-  devtool: 'cheap-module-eval-source-map',
-
-  // 配置 webpack-dev-server
-  devServer: {
-    // 自动打开浏览器
-    open: true,
-
-    // 端口号
-    port: 8000,
-
-    // 设置根目录
-    contentBase: 'src',
-
-    // 启用热更新:第 1 步
-    hot: true,
-
-    // 代理
-    proxy: {
-      '/api': 'http://localhost:3000',
-    },
+  /**
+   *  1. 开启 watch，一旦源码变化就重新打包
+   *  2. 输出到 “www” 目录后，执行 shell `$ cordova build browser`（通过 CordovaBroswerWebpackPlugin）
+   */
+  watch: true,
+  watchOptions: {
+    ignored: /node_modules/,
   },
 
   // 配置插件
   plugins: [
-
-    new webpack.HotModuleReplacementPlugin(),
-
+    // 构建完成后，执行 shell 命令
+    new CordovaBroswerWebpackPlugin({
+      cmd: `cordova build ${JSON.parse(env.dev['process.env.platform'])}`,
+    }),
   ],
 });

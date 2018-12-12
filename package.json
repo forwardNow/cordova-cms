@@ -7,12 +7,12 @@
         "url": "git+https://github.com/forwardNow/cordova-cms.git"
     },
     "scripts": {
-        "start": "cross-env platform=browser isWatch=true baseURL=http://192.168.1.17:8000 npm run build:vue",
-        "server:start": "cd server && node app.js",
-        "build:vue": "cross-env baseURL=http://192.168.1.17:8000 webpack --progress --config ./build/webpack.config.prod.js",
+        "dev": "cross-env NODE_ENV=dev webpack --progress --config ./build/webpack.config.dev.js",
+        "build": "cross-env NODE_ENV=prod webpack --progress --config ./build/webpack.config.prod.js",
+        "serve": "cd server && node app.js",
         "build:android": "cordova build android",
         "build:browser": "cordova build browser",
-        "run:emulator": "cordova run android --emulator"
+        "emulator:android": "cordova run android --emulator"
     },
     "keywords": [],
     "author": "",
@@ -29,6 +29,7 @@
         "express": "^4.16.3",
         "express-art-template": "^1.0.1",
         "express-jwt": "^5.3.1",
+        "internal-ip": "^3.0.1",
         "js-object-pretty-print": "^0.3.0",
         "jsonwebtoken": "^8.3.0",
         "lodash.clonedeep": "^4.5.0",

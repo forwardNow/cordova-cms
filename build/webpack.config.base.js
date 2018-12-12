@@ -2,26 +2,26 @@ const path = require('path');
 const notifier = require('node-notifier');
 const webpack = require('webpack');
 
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
+const { dev, prod } = require('./env');
 
-const platform = JSON.stringify(process.env.platform);
-const baseURL = JSON.stringify(process.env.baseURL);
-const isWatch = Boolean(process.env.isWatch);
+const isDev = JSON.stringify(process.env.NODE_ENV) === 'dev';
 
+const env = isDev ? dev : prod;
 
-
-console.log(baseURL);
+console.log(dev, prod);
 
 module.exports = {
+  mode: 'production',
 
-  watch: isWatch,
-
-  watchOptions: {
-    ignored: /node_modules/,
+  stats: {
+    children: false,
   },
 
   // 入口。指定要打包文件的位置
@@ -93,7 +93,7 @@ module.exports = {
                * 设置打包后的文件名称，默认为 hash 值名称
                * [hash:8] 取前 8 位 hash 值
                */
-              name: '[name].[ext]',
+              name: 'images/[name].[ext]',
             },
           },
         ],
@@ -112,7 +112,7 @@ module.exports = {
                * 设置打包后的文件名称，默认为 hash 值名称
                * [hash:8] 取前 8 位 hash 值
                */
-              name: '[name].[ext]',
+              name: 'fonts/[name].[ext]',
             },
           },
         ],
@@ -130,10 +130,17 @@ module.exports = {
   },
   // 配置插件
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env.baseURL': baseURL,
-      'process.env.platform': platform,
+    new webpack.DefinePlugin(env),
+
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[name].css',
     }),
+
+    new CleanWebpackPlugin(['www', ''], {
+      root: path.join(__dirname, '..'),
+    }),
+
 
     new VueLoaderPlugin(),
 
@@ -164,4 +171,38 @@ module.exports = {
       filename: 'index.html',
     }),
   ],
+  optimization: {
+    minimizer: [
+      new OptimizeCssAssetsPlugin({
+        assetNameRegExp: /\.css$/g,
+        cssProcessorOptions: {
+          safe: true,
+          autoprefixer: { disable: true },
+          mergeLonghand: false,
+          discardComments: {
+            removeAll: true,
+          },
+        },
+        canPrint: true,
+      }),
+    ],
+    splitChunks: {
+      chunks: 'initial', // 只对入口文件处理
+      minSize: 30000,
+      cacheGroups: {
+        vendor: {
+          test: /node_modules/,
+          name: 'vendor',
+          priority: 1,
+        },
+        commons: {
+          test: /\.js$/,
+          name: 'commons',
+        },
+      },
+    },
+    runtimeChunk: {
+      name: 'manifest',
+    },
+  },
 };

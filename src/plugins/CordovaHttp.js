@@ -5,7 +5,7 @@ import router from '../router';
 
 
 const DEFAULTS = {
-  baseURL: process.env.baseURL || '',
+  baseURL: process.env.baseURL,
   url: '',
   method: 'post',
   data: {},

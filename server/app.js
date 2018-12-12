@@ -1,3 +1,5 @@
+const internalIp = require('internal-ip');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const expressJwt = require('express-jwt');
@@ -128,5 +130,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  logger.debug(`服务已启动，访问 http://localhost:${PORT}/www`);
+  logger.debug(`服务已启动，访问 http://${internalIp.v4.sync()}:${PORT}/www`);
 });
