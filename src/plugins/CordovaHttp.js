@@ -1,8 +1,9 @@
 import merge from 'lodash.merge';
 import { pretty } from 'js-object-pretty-print';
 import { Indicator, MessageBox } from 'mint-ui';
-import router from '../router';
 
+import router from '../router';
+import Token from './Token';
 
 const DEFAULTS = {
   baseURL: process.env.baseURL,
@@ -26,9 +27,18 @@ const DEFAULTS = {
   timeout: null,
 };
 
-function handleStatus(url, res) {
+function handleStatus(res) {
   let desc;
-  const status = JSON.parse(res.data).errorCode;
+  const { url, data } = res;
+  let status = JSON.parse(data).errorCode;
+
+  if (data) {
+    status = JSON.parse(data).errorCode;
+  } else {
+    // throw new Error('消息体为空！');
+    status = '???';
+  }
+
 
   switch (status) {
     case 0:
@@ -59,7 +69,7 @@ function handleStatus(url, res) {
       break;
     }
     default: {
-      // desc = '未知错误!';
+      desc = '未知错误!';
       // break;
       return;
     }
@@ -89,14 +99,18 @@ class CordovaHttp {
       });
 
       opts.url = baseURL + url;
+      opts.headers.token = Token.get() || '';
 
       console.log(pretty(opts));
 
       return opts;
     },
-    response(url, res) {
+    response(res) {
       Indicator.close();
-      handleStatus(url, res);
+
+      Token.set(res.headers.token);
+
+      handleStatus(res);
 
       console.log(pretty(res));
       return res;
@@ -110,12 +124,12 @@ class CordovaHttp {
 
     return new Promise((resolve, reject) => {
       const success = (response) => {
-        const res = CordovaHttp.interceptors.response(url, response);
+        const res = CordovaHttp.interceptors.response(response);
 
         resolve(JSON.parse(res.data));
       };
       const failure = (response) => {
-        const res = CordovaHttp.interceptors.response(url, response);
+        const res = CordovaHttp.interceptors.response(response);
 
         reject(new Error(pretty(res)));
       };
@@ -127,7 +141,7 @@ class CordovaHttp {
    * POST 请求
    * @param url {String}
    * @param data {Object} 请求数据 json
-   * @param headers {Object}
+   * @param headers {Object?}
    */
   post(url, data, headers) {
     return this.request(url, { data, headers });

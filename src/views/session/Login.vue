@@ -1,10 +1,19 @@
 <template>
   <div class="login">
-    <form class="login__form">
-      <mt-field label="用户" v-model="formModel.loginName"></mt-field>
-      <mt-field label="密码" type="password" v-model="formModel.password"></mt-field>
-      <mt-button class="btn-submit" size="large" type="primary" @click="onSubmit">登 陆</mt-button>
+
+    <div class="login__profile">
+      <img src="../../assets/images/avatar_demo.png" alt="" class="avatar">
+    </div>
+
+    <form class="login__form" @submit.prevent>
+      <mt-field label="用户" placeholder="输入用户名"
+                v-model="formModel.loginName"></mt-field>
+      <mt-field label="密码" type="password" placeholder="输入密码"
+                v-model="formModel.password"></mt-field>
+      <mt-button class="btn-submit" size="large" type="primary"
+                 @click="onSubmit">登 陆</mt-button>
     </form>
+
   </div>
 </template>
 
@@ -39,10 +48,8 @@ export default {
             duration: 1000,
           });
 
-          SessionService.store(res.result);
-
           // 如果是 401 过来的，则退一步
-          if (this.$route.query.status === 401) {
+          if ([ '401', 401].includes(this.$route.query.status)) {
             this.$router.go(-1);
           } else {
             this.$router.push({ path: '/' });
@@ -81,6 +88,7 @@ export default {
     }
 
     .mint-field-core {
+      color: #fff;
       background: none;
     }
 
@@ -90,5 +98,17 @@ export default {
   }
 
   .login__form {
+  }
+
+  .login__profile {
+    width: 100px;
+    margin: 100px auto 50px auto;
+
+    .avatar {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      border-radius: 100%;
+    }
   }
 </style>
